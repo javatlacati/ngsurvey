@@ -66,6 +66,9 @@
               "browserTarget": "ngsurvey:build:development"
             }
           },
+          "options": {
+            "port": 4201
+          },
           "defaultConfiguration": "development"
         },
         "extract-i18n": {
@@ -94,5 +97,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "556ede2d-9c7c-41fe-af38-910f2e47034e"
   }
 }
