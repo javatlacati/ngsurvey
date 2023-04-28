@@ -1,0 +1,27 @@
+<p>survey works!</p>
+
+<ng-form>
+  <div *ngFor="let item of items">{{ item.surveyTemplateId }}
+    <div *ngFor="let section of item.sections">{{section.name}}
+      <div *ngFor="let question of section.questions">
+        <h2>{{question.statement}}</h2>
+        <div [ngSwitch]="question.type">
+          <div *ngSwitchCase="'OpenQuestion'">
+            open question
+            <input matInput placeholder="" [required]="question.required">
+          </div>
+          <div *ngSwitchCase="'DateQuestion'">
+            date question
+            <!--            <input matInput placeholder="" [required]="question.required">-->
+          </div>
+          <div *ngSwitchCase="'MultipleOptionQuestion'">
+            multiple option question
+            <!--            <input matInput placeholder="" [required]="question.required">-->
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-form>
+
