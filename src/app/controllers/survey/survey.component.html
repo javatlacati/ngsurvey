@@ -1,27 +1,52 @@
 <p>survey works!</p>
 
 <ng-form>
-  <div *ngFor="let item of items">{{ item.surveyTemplateId }}
-    <div *ngFor="let section of item.sections">{{section.name}}
-      <div *ngFor="let question of section.questions">
-        <h2>{{question.statement}}</h2>
-        <div [ngSwitch]="question.type">
-          <div *ngSwitchCase="'OpenQuestion'">
-            open question
-            <input matInput placeholder="" [required]="question.required">
-          </div>
-          <div *ngSwitchCase="'DateQuestion'">
-            date question
-            <!--            <input matInput placeholder="" [required]="question.required">-->
-          </div>
-          <div *ngSwitchCase="'MultipleOptionQuestion'">
-            multiple option question
-            <!--            <input matInput placeholder="" [required]="question.required">-->
-          </div>
-
+  <div *ngFor="let item of items">Plantilla {{ item.surveyTemplateId }}
+    <cdk-accordion class="example-accordion">
+      <cdk-accordion-item *ngFor="let section of item.sections; let index = index;"
+                          #accordionItem="cdkAccordionItem"
+                          class="example-accordion-item"
+                          role="button"
+                          tabindex="0"
+                          [attr.id]="'accordion-header-' + index"
+                          [attr.aria-expanded]="accordionItem.expanded"
+                          [attr.aria-controls]="'accordion-body-' + index">
+        <div class="example-accordion-item-header" (click)="accordionItem.toggle()">
+          {{ section.name }}
+          <span class="example-accordion-item-description">
+        Click to {{ accordionItem.expanded ? 'close' : 'open' }}
+      </span>
         </div>
-      </div>
-    </div>
+
+        <div class="example-accordion-item-body" role="region" [style.display]="accordionItem.expanded ? '' : 'none'"
+             [attr.id]="'accordion-body-' + index"
+             [attr.aria-labelledby]="'accordion-header-' + index">
+          <div *ngFor="let question of section.questions">
+            <h3>{{question.statement}}</h3>
+            <div [ngSwitch]="question.type">
+              <div *ngSwitchCase="'OpenQuestion'">
+                <mat-form-field>
+                  <input matInput placeholder="" [required]="question.required">
+                </mat-form-field>
+              </div>
+              <div *ngSwitchCase="'DateQuestion'">
+                <mat-form-field>
+                  <input type="date" matInput placeholder="" [required]="question.required">
+                </mat-form-field>
+              </div>
+              <div *ngSwitchCase="'MultipleOptionQuestion'">
+                <mat-radio-group>
+                  <mat-radio-button *ngFor="let option of question?.multipleOptionQuestion?.answerOptions">
+                    {{option}}
+                  </mat-radio-button>
+                </mat-radio-group>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </cdk-accordion-item>
+    </cdk-accordion>
   </div>
 </ng-form>
 

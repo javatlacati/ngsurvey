@@ -9,21 +9,25 @@ import { SurveyComponent } from './controllers/survey/survey.component';
 import {AppRoutingModule} from "./app-routing.module";
 import {MatInputModule} from "@angular/material/input";
 import {FormsModule} from "@angular/forms";
+import {MatRadioModule} from "@angular/material/radio";
+import {CdkAccordionModule} from "@angular/cdk/accordion";
 
 @NgModule({
   declarations: [
     AppComponent,
     SurveyComponent
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        GraphQLModule,
-        HttpClientModule,
-        BrowserAnimationsModule,
-        MatInputModule,
-        FormsModule
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    GraphQLModule,
+    HttpClientModule,
+    BrowserAnimationsModule,
+    MatInputModule,
+    FormsModule,
+    MatRadioModule,
+    CdkAccordionModule
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })

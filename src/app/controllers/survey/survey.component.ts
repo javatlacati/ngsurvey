@@ -10,16 +10,17 @@ import {SurveyTemplate} from "../../model/SurveyTemplate";
 })
 export class SurveyComponent implements OnInit{
   items: SurveyTemplate[] = [];
+  expandedSectionIndex = 0;
   constructor(private apollo: Apollo) {}
 
   ngOnInit() {
     this.apollo
       .query({
         query: gql`
-
           {
             sayHello
             templates {
+              surveyTemplateId
               sections {
                 sectionId
                 name

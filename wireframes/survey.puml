@@ -1,0 +1,25 @@
+@startsalt
+'https://plantuml.com/salt
+{
+!theme mimeograph
+
+  Plantilla #1
+    | - Datos generales
+    | --
+    {
+      Nombre: | {"Natalio Reyes Colás"}
+      <color:#9a9a9a>Obligatoria; Sí
+    }
+    {
+      Fecha: | {"20/02/2023"|<&calendar>}
+      <color:#9a9a9a>Obligatoria; Sí
+    }
+    {
+      Sexo: | {(X) masculino|() femenino}
+      <color:#9a9a9a>Obligatoria; Sí
+      }
+    | --
+    + Sección 2
+    + Sección 3
+}
+@endsalt
