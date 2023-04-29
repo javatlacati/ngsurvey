@@ -11,6 +11,7 @@ import {MatInputModule} from "@angular/material/input";
 import {FormsModule} from "@angular/forms";
 import {MatRadioModule} from "@angular/material/radio";
 import {CdkAccordionModule} from "@angular/cdk/accordion";
+import {MatCardModule} from "@angular/material/card";
 
 @NgModule({
   declarations: [
@@ -18,15 +19,16 @@ import {CdkAccordionModule} from "@angular/cdk/accordion";
     SurveyComponent
   ],
   imports: [
-    BrowserModule,
     AppRoutingModule,
+    BrowserModule,
+    BrowserAnimationsModule,
+    CdkAccordionModule,
+    FormsModule,
     GraphQLModule,
     HttpClientModule,
-    BrowserAnimationsModule,
+    MatCardModule,
     MatInputModule,
-    FormsModule,
-    MatRadioModule,
-    CdkAccordionModule
+    MatRadioModule
   ],
   providers: [],
   bootstrap: [AppComponent]
