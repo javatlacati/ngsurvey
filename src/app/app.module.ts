@@ -12,6 +12,7 @@ import {FormsModule} from "@angular/forms";
 import {MatRadioModule} from "@angular/material/radio";
 import {CdkAccordionModule} from "@angular/cdk/accordion";
 import {MatCardModule} from "@angular/material/card";
+import {MatButtonModule} from "@angular/material/button";
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import {MatCardModule} from "@angular/material/card";
     HttpClientModule,
     MatCardModule,
     MatInputModule,
-    MatRadioModule
+    MatRadioModule,
+    MatButtonModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Apollo, gql} from "apollo-angular";
 import {Survey} from "../../model/Survey";
 import {SurveyTemplate} from "../../model/SurveyTemplate";
+import {NgForm} from '@angular/forms';
 
 @Component({
   selector: 'survey',
@@ -52,7 +53,7 @@ export class SurveyComponent implements OnInit{
       });
   }
 
-  guardarEncuesta() {
-    console.log("Guardar encuesta")
+  guardarEncuesta(forma: NgForm) {
+    console.log(forma)
   }
 }
