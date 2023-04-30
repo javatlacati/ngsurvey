@@ -1,5 +1,5 @@
 <mat-card>
-  <ng-form>
+  <form (ngSubmit)="guardarEncuesta()">
     <div *ngFor="let item of items">
       <mat-card-header>
         Plantilla {{ item.surveyTemplateId }}
@@ -53,6 +53,9 @@
         </cdk-accordion>
       </mat-card-content>
     </div>
-  </ng-form>
+    <mat-card-footer>
+      <button type="submit" class="btn btn-outline-primary btn-block">Enviar</button>
+    </mat-card-footer>
+  </form>
 </mat-card>
 

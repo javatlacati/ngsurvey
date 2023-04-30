@@ -6,7 +6,7 @@ import {SurveyTemplate} from "../../model/SurveyTemplate";
 @Component({
   selector: 'survey',
   templateUrl: './survey.component.html',
-  styleUrls: ['./survey.component.css']
+  styleUrls: ['./survey.component.scss']
 })
 export class SurveyComponent implements OnInit{
   items: SurveyTemplate[] = [];
@@ -50,5 +50,9 @@ export class SurveyComponent implements OnInit{
         // @ts-ignore
         this.items = data.templates;
       });
+  }
+
+  guardarEncuesta() {
+    console.log("Guardar encuesta")
   }
 }
