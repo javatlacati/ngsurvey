@@ -1,58 +1,62 @@
 <mat-card>
   <form (ngSubmit)="guardarEncuesta(forma)" #forma="ngForm">
-    <div *ngFor="let item of items">
-      <mat-card-header>
-        Plantilla {{ item.surveyTemplateId }}
-      </mat-card-header>
-      <mat-card-content>
-        <cdk-accordion class="example-accordion">
-          <cdk-accordion-item *ngFor="let section of item.sections; let index = index;"
-                              #accordionItem="cdkAccordionItem"
-                              class="example-accordion-item"
-                              role="button"
-                              tabindex="0"
-                              [attr.id]="'accordion-header-' + index"
-                              [attr.aria-expanded]="accordionItem.expanded"
-                              [attr.aria-controls]="'accordion-body-' + index">
-            <div class="example-accordion-item-header" (click)="accordionItem.toggle()">
-              {{ section.name }}
-              <span class="example-accordion-item-description">
+    <mat-card-header>
+      Plantilla {{ item?.surveyTemplateId }}
+    </mat-card-header>
+    <mat-card-content>
+      <cdk-accordion class="example-accordion">
+        <cdk-accordion-item *ngFor="let section of item?.sections; let index = index;"
+                            #accordionItem="cdkAccordionItem"
+                            class="example-accordion-item"
+                            role="button"
+                            tabindex="0"
+                            [attr.id]="'accordion-header-' + index"
+                            [attr.aria-expanded]="accordionItem.expanded"
+                            [attr.aria-controls]="'accordion-body-' + index">
+          <div class="example-accordion-item-header" (click)="accordionItem.toggle()">
+            {{ section.name }}
+            <span class="example-accordion-item-description">
         Click para {{ accordionItem.expanded ? 'cerrar' : 'abrir' }}
       </span>
-            </div>
+          </div>
 
-            <div class="example-accordion-item-body" role="region"
-                 [style.display]="accordionItem.expanded ? '' : 'none'"
-                 [attr.id]="'accordion-body-' + index"
-                 [attr.aria-labelledby]="'accordion-header-' + index">
-              <div *ngFor="let question of section.questions">
-                <h3>{{question.statement}}</h3>
-                <div [ngSwitch]="question.type">
-                  <div *ngSwitchCase="'OpenQuestion'">
-                    <mat-form-field>
-                      <input matInput name="txtOpenQuestion" placeholder="" [required]="question.required" [ngModel]="question.openQuestion?.answer">
-                    </mat-form-field>
-                  </div>
-                  <div *ngSwitchCase="'DateQuestion'">
-                    <mat-form-field>
-                      <input type="date" matInput name="txtDate" placeholder="" [required]="question.required" [ngModel]="question?.dateQuestion?.theDate">
-                    </mat-form-field>
-                  </div>
-                  <div *ngSwitchCase="'MultipleOptionQuestion'">
-                    <mat-radio-group>
-                      <mat-radio-button *ngFor="let option of question?.multipleOptionQuestion?.answerOptions">
-                        {{option}}
-                      </mat-radio-button>
-                    </mat-radio-group>
-                  </div>
+          <div class="example-accordion-item-body" role="region"
+               [style.display]="accordionItem.expanded ? '' : 'none'"
+               [attr.id]="'accordion-body-' + index"
+               [attr.aria-labelledby]="'accordion-header-' + index">
+            <div *ngFor="let question of section.questions">
+              <div [ngSwitch]="question.type">
 
+                <div *ngSwitchCase="'OPEN'">
+                  <mat-form-field [style.width.%]="100">
+                    <mat-label>{{ question.statement }}</mat-label>
+                    <textarea matInput></textarea>
+                  </mat-form-field>
                 </div>
+                <div *ngSwitchCase="'DATE'">
+                  <mat-form-field [style.width.%]="100">
+                    <mat-label>{{ question.statement }}</mat-label>
+                    <input matInput [matDatepicker]="picker">
+                    <mat-hint>DD/MM/AAAA</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker startView="year"></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div *ngSwitchCase="'MULTIPLE_OPTION'">
+                  <mat-form-field [style.width.%]="100">
+                    <mat-label>{{ question.statement }}</mat-label>
+                    <mat-select>
+                      <mat-option *ngFor="let option of getOptions(question)" [value]="option">{{option}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
               </div>
             </div>
-          </cdk-accordion-item>
-        </cdk-accordion>
-      </mat-card-content>
-    </div>
+          </div>
+        </cdk-accordion-item>
+      </cdk-accordion>
+    </mat-card-content>
     <mat-card-footer>
       <button mat-raised-button type="submit" color="primary">Enviar</button>
     </mat-card-footer>

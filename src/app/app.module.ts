@@ -13,6 +13,9 @@ import {MatRadioModule} from "@angular/material/radio";
 import {CdkAccordionModule} from "@angular/cdk/accordion";
 import {MatCardModule} from "@angular/material/card";
 import {MatButtonModule} from "@angular/material/button";
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import {MatSelectModule} from "@angular/material/select";
+import {MAT_DATE_LOCALE, MatNativeDateModule} from "@angular/material/core";
 
 @NgModule({
   declarations: [
@@ -30,9 +33,12 @@ import {MatButtonModule} from "@angular/material/button";
     MatCardModule,
     MatInputModule,
     MatRadioModule,
-    MatButtonModule
+    MatButtonModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatSelectModule
   ],
-  providers: [],
+  providers: [{provide: MAT_DATE_LOCALE, useValue: 'es-MX'}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

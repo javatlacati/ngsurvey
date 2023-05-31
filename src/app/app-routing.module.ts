@@ -3,7 +3,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {SurveyComponent} from "./controllers/survey/survey.component";
 
 const routes: Routes = [
-  {path: 'survey', component: SurveyComponent},
+  {path: 'survey/:uuid', component: SurveyComponent},
   {path:'**', pathMatch: 'full', redirectTo:'survey'}
 ];
 
