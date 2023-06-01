@@ -5,14 +5,14 @@
     </mat-card-header>
     <mat-card-content>
       <cdk-accordion class="example-accordion">
-        <cdk-accordion-item *ngFor="let section of item?.sections; let index = index;"
+        <cdk-accordion-item *ngFor="let section of item?.sections; let sectionIndex = index;"
                             #accordionItem="cdkAccordionItem"
                             class="example-accordion-item"
                             role="button"
                             tabindex="0"
-                            [attr.id]="'accordion-header-' + index"
+                            [attr.id]="'accordion-header-' + sectionIndex"
                             [attr.aria-expanded]="accordionItem.expanded"
-                            [attr.aria-controls]="'accordion-body-' + index">
+                            [attr.aria-controls]="'accordion-body-' + sectionIndex">
           <div class="example-accordion-item-header" (click)="accordionItem.toggle()">
             {{ section.name }}
             <span class="example-accordion-item-description">
@@ -22,21 +22,25 @@
 
           <div class="example-accordion-item-body" role="region"
                [style.display]="accordionItem.expanded ? '' : 'none'"
-               [attr.id]="'accordion-body-' + index"
-               [attr.aria-labelledby]="'accordion-header-' + index">
-            <div *ngFor="let question of section.questions">
+               [attr.id]="'accordion-body-' + sectionIndex"
+               [attr.aria-labelledby]="'accordion-header-' + sectionIndex">
+            <div *ngFor="let question of section.questions; let questionIndex = index;">
               <div [ngSwitch]="question.type">
 
                 <div *ngSwitchCase="'OPEN'">
                   <mat-form-field [style.width.%]="100">
                     <mat-label>{{ question.statement }}</mat-label>
-                    <textarea matInput></textarea>
+                    <input [id]="section.sectionId+'_'+question.questionId"
+                           [name]="section.sectionId+'_'+question.questionId" matInput
+                           [(ngModel)]="userResponses[sectionIndex][questionIndex]">
                   </mat-form-field>
                 </div>
                 <div *ngSwitchCase="'DATE'">
                   <mat-form-field [style.width.%]="100">
                     <mat-label>{{ question.statement }}</mat-label>
-                    <input matInput [matDatepicker]="picker">
+                    <input [id]="section.sectionId+'_'+question.questionId"
+                           [name]="section.sectionId+'_'+question.questionId" matInput [matDatepicker]="picker"
+                           [(ngModel)]="userResponses[sectionIndex][questionIndex]">
                     <mat-hint>DD/MM/AAAA</mat-hint>
                     <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker #picker startView="year"></mat-datepicker>
@@ -45,8 +49,11 @@
                 <div *ngSwitchCase="'MULTIPLE_OPTION'">
                   <mat-form-field [style.width.%]="100">
                     <mat-label>{{ question.statement }}</mat-label>
-                    <mat-select>
-                      <mat-option *ngFor="let option of getOptions(question)" [value]="option">{{option}}</mat-option>
+                    <mat-select [(ngModel)]="userResponses[sectionIndex][questionIndex]"
+                                name="question_{{sectionIndex}}">
+                      <mat-option *ngFor="let option of getOptions(question); let i = index"
+                                  [value]="option">
+                        <span [attr.id]="section.sectionId+'_'+question.questionId+'_'+i">{{option}}</span></mat-option>
                     </mat-select>
                   </mat-form-field>
                 </div>

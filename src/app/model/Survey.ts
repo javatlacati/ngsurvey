@@ -1,5 +1,8 @@
 import {SurveyTemplate} from "./SurveyTemplate";
+import {Answer} from "./Answer";
 
 export class Survey {
-  templates: SurveyTemplate[]=[];
+  surveyId: number | null = null
+  templateId: number | null = null;
+  answers: Answer[] = []
 }
