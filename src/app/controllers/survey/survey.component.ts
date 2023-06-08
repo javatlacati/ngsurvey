@@ -6,9 +6,8 @@ import {NgForm} from '@angular/forms';
 import {ActivatedRoute} from "@angular/router";
 import {Question} from "../../model/Question";
 import {MultipleOptionQuestion} from "../../model/MultipleOptionQuestion";
-import {MultipleOptionAnswer} from "../../model/MultipleOptionAnswer";
-import {OpenQuestionAnswer} from "../../model/OpenQuestionAnswer";
-import {DateAnswer} from "../../model/DateAnswer";
+import {Answer} from "../../model/Answer";
+import {AnswerData} from "../../model/AnswerData";
 
 @Component({
   selector: 'survey',
@@ -27,8 +26,8 @@ export class SurveyComponent implements OnInit {
     const routeParams = this.route.snapshot.paramMap;
     const uuid = routeParams.get("uuid")
     this.apollo
-    .query({
-      query: gql`
+      .query({
+        query: gql`
         query GetTemplateByUuid($uuid: String!) {
           template(uuid: $uuid) {
             surveyTemplateId
@@ -54,21 +53,21 @@ export class SurveyComponent implements OnInit {
             }
           }
         }`,
-      variables: {
-        "uuid": uuid
-      }
-    })
-    .subscribe(({data}) => {
-      // @ts-ignore
-      this.item = data.template;
-      if (this.item) {
-        let numberSections = this.item.sections.length
-        this.userResponses = []
-        for (let i = 0; i < numberSections; i++) {
-          this.userResponses.push([])
+        variables: {
+          "uuid": uuid
         }
-      }
-    });
+      })
+      .subscribe(({data}) => {
+        // @ts-ignore
+        this.item = data.template;
+        if (this.item) {
+          let numberSections = this.item.sections.length
+          this.userResponses = []
+          for (let i = 0; i < numberSections; i++) {
+            this.userResponses.push([])
+          }
+        }
+      });
   }
 
   guardarEncuesta(forma: NgForm) {
@@ -86,32 +85,40 @@ export class SurveyComponent implements OnInit {
             console.log(`#${section.sectionId}_${question.questionId}`)
             let moq = question as MultipleOptionQuestion
             for (let optionIdx = 0; optionIdx < moq.answerOptions.length; optionIdx++) {
-              let multipleOptionAnswer = new MultipleOptionAnswer();
+              let multipleOptionAnswer = new Answer();
               multipleOptionAnswer.questionId = question.questionId;
-              multipleOptionAnswer.answerIdx = moq.answerOptions.findIndex(this.userResponses[sectionIdx][questionIdx])
               multipleOptionAnswer.questionType = moq.type
+              multipleOptionAnswer.answerData = new AnswerData()
+              multipleOptionAnswer.answerData.answerIdx = moq.answerOptions.findIndex(value => value === this.userResponses[sectionIdx][questionIdx])
               survey.answers.push(multipleOptionAnswer)
               // console.log(`selector "#${section.sectionId}_${question.questionId}_${optionIdx}"`)
             }
           } else {
             if (question.type == 'DATE') {
-              let dateQuestion = new DateAnswer()
+              let dateQuestion = new Answer()
               dateQuestion.questionType = question.type
-              dateQuestion.theDate = this.userResponses[sectionIdx][questionIdx]
               dateQuestion.questionId = question.questionId
+              dateQuestion.answerData = new AnswerData()
+              dateQuestion.answerData.theDate = new Date(this.userResponses[sectionIdx][questionIdx]).toLocaleDateString('es-MX', {
+                year: '2-digit',
+                month: '2-digit',
+                day: '2-digit'
+              })
               survey.answers.push(dateQuestion)
             } else if (question.type == 'OPEN') { //OPEN
-              let openQuestion = new OpenQuestionAnswer()
-              openQuestion.questionType = question.type
-              openQuestion.answer = this.userResponses[sectionIdx][questionIdx]
-              openQuestion.questionId = question.questionId
-              survey.answers.push(openQuestion)
+              let openQuestionAnswer = new Answer()
+              openQuestionAnswer.questionType = question.type
+              openQuestionAnswer.questionId = question.questionId
+              openQuestionAnswer.answerData = new AnswerData()
+              openQuestionAnswer.answerData.answer = this.userResponses[sectionIdx][questionIdx]
+              survey.answers.push(openQuestionAnswer)
             } else {
               let moq = question as MultipleOptionQuestion
-              let multipleOptionAnswer = new MultipleOptionAnswer();
+              let multipleOptionAnswer = new Answer();
               multipleOptionAnswer.questionId = question.questionId;
-              multipleOptionAnswer.answerIdx = moq.answerOptions.findIndex(value => value === this.userResponses[sectionIdx][questionIdx])
               multipleOptionAnswer.questionType = moq.type
+              multipleOptionAnswer.answerData = new AnswerData()
+              multipleOptionAnswer.answerData.answerIdx = moq.answerOptions.findIndex(value => value === this.userResponses[sectionIdx][questionIdx])
               survey.answers.push(multipleOptionAnswer)
               // console.log(`selector "#${section.sectionId}_${question.questionId}_${optionIdx}"`)
             }
@@ -120,6 +127,32 @@ export class SurveyComponent implements OnInit {
         }
       }
       console.log(`sending answers: ${JSON.stringify(survey)}`)
+
+      this.apollo.mutate(
+        {
+          mutation: gql`mutation {
+    saveNewSurvey(
+        survey: ${survey}
+        )  {
+      surveyId
+      templateId
+      answers {
+        id
+        questionId
+        questionType
+        answerData {
+          answer
+          answerIdx
+          theDate
+        }
+      }
+    }`
+        }
+      ).subscribe(({data}) => {
+        // @ts-ignore
+        console.log(`saved:${JSON.stringify(data)}`)
+      })
+
     }
   }
 
