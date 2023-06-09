@@ -72,7 +72,7 @@ export class SurveyComponent implements OnInit {
               dateQuestion.questionId = question.questionId
               dateQuestion.answerData = new AnswerData()
               dateQuestion.answerData.theDate = new Date(this.userResponses[sectionIdx][questionIdx]).toLocaleDateString('es-MX', {
-                year: '2-digit',
+                year: "numeric",
                 month: '2-digit',
                 day: '2-digit'
               })
