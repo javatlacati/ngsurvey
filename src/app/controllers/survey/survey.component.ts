@@ -8,6 +8,7 @@ import {Question} from "../../model/Question";
 import {MultipleOptionQuestion} from "../../model/MultipleOptionQuestion";
 import {Answer} from "../../model/Answer";
 import {AnswerData} from "../../model/AnswerData";
+import {SurveyService} from "../../services/SurveyService";
 
 @Component({
   selector: 'survey',
@@ -19,55 +20,26 @@ export class SurveyComponent implements OnInit {
   expandedSectionIndex = 0;
   userResponses: any[][] = [[], []];
 
-  constructor(private apollo: Apollo, private route: ActivatedRoute) {
+  constructor(private apollo: Apollo, private route: ActivatedRoute, private surveyService: SurveyService) {
   }
 
   ngOnInit() {
     const routeParams = this.route.snapshot.paramMap;
     const uuid = routeParams.get("uuid")
-    this.apollo
-      .query({
-        query: gql`
-        query GetTemplateByUuid($uuid: String!) {
-          template(uuid: $uuid) {
-            surveyTemplateId
-            uuid
-            sections {
-              sectionId
-              name
-              questions {
-                ... on MultipleOptionQuestion {
-                  questionId
-                  statement
-                  type
-                  required
-                  answerOptions
-                }
-                ... on Question {
-                  questionId
-                  statement
-                  type
-                  required
-                }
-              }
+    if (uuid) {
+      this.surveyService.retrieveTemplateByUuid(uuid)
+        .subscribe(({data}) => {
+          // @ts-ignore
+          this.item = data.template;
+          if (this.item) {
+            let numberSections = this.item.sections.length
+            this.userResponses = []
+            for (let i = 0; i < numberSections; i++) {
+              this.userResponses.push([])
             }
           }
-        }`,
-        variables: {
-          "uuid": uuid
-        }
-      })
-      .subscribe(({data}) => {
-        // @ts-ignore
-        this.item = data.template;
-        if (this.item) {
-          let numberSections = this.item.sections.length
-          this.userResponses = []
-          for (let i = 0; i < numberSections; i++) {
-            this.userResponses.push([])
-          }
-        }
-      });
+        });
+    }
   }
 
   guardarEncuesta(forma: NgForm) {
@@ -127,31 +99,11 @@ export class SurveyComponent implements OnInit {
         }
       }
       console.log(`sending answers: ${JSON.stringify(survey)}`)
-
-      this.apollo.mutate(
-        {
-          mutation: gql`mutation {
-    saveNewSurvey(
-        survey: ${survey}
-        )  {
-      surveyId
-      templateId
-      answers {
-        id
-        questionId
-        questionType
-        answerData {
-          answer
-          answerIdx
-          theDate
-        }
-      }
-    }`
-        }
-      ).subscribe(({data}) => {
-        // @ts-ignore
-        console.log(`saved:${JSON.stringify(data)}`)
-      })
+      this.surveyService.saveSurvey({survey})
+        .subscribe(({data}) => {
+          // @ts-ignore
+          console.log(`saved:${JSON.stringify(data)}`)
+        }, (err) => console.error(err))
 
     }
   }

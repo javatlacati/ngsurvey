@@ -1,0 +1,92 @@
+union ATypeOfQuestion = MultipleOptionQuestion | Question
+
+type Answer {
+  answerData: AnswerData
+  id: BigInteger
+  questionId: BigInteger
+  questionType: QuestionType
+}
+
+type AnswerData {
+  answer: String
+  answerIdx: Int
+  "dd/MM/yyyy"
+  theDate: String
+}
+
+type MultipleOptionQuestion {
+  "Answer options"
+  answerOptions: [String]
+  questionId: BigInteger
+  required: Boolean!
+  statement: String
+  type: QuestionType
+}
+
+"Mutation root"
+type Mutation {
+  "saves survey responses"
+  saveNewSurvey(survey: SurveyInput): Survey
+}
+
+"Query root"
+type Query {
+  "retrieves al answered surveys"
+  surveys: [Survey]
+  "Retrieves a template"
+  template(uuid: String): SurveyTemplate
+  "Retrieves all templates"
+  templates: [SurveyTemplate]
+}
+
+type Question {
+  questionId: BigInteger
+  required: Boolean!
+  statement: String
+  type: QuestionType
+}
+
+type Section {
+  "The section name"
+  name: String
+  questions: [ATypeOfQuestion]
+  sectionId: BigInteger
+}
+
+type Survey {
+  answers: [Answer]
+  surveyId: BigInteger
+  templateId: BigInteger
+}
+
+type SurveyTemplate {
+  sections: [Section]
+  surveyTemplateId: BigInteger
+  uuid: String
+}
+
+enum QuestionType {
+  DATE
+  MULTIPLE_OPTION
+  OPEN
+}
+
+input AnswerDataInput {
+  answer: String
+  answerIdx: Int
+  "dd/MM/yyyy"
+  theDate: String
+}
+
+input AnswerInput {
+  answerData: AnswerDataInput
+  id: BigInteger
+  questionId: BigInteger
+  questionType: QuestionType
+}
+
+input SurveyInput {
+  answers: [AnswerInput]
+  surveyId: BigInteger
+  templateId: BigInteger
+}
