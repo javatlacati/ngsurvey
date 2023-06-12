@@ -16,11 +16,13 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatSelectModule} from "@angular/material/select";
 import {MAT_DATE_LOCALE, MatNativeDateModule} from "@angular/material/core";
+import { HomeComponent } from './controllers/home/home.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    SurveyComponent
+    SurveyComponent,
+    HomeComponent
   ],
   imports: [
     AppRoutingModule,

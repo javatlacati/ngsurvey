@@ -1,10 +1,12 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {SurveyComponent} from "./controllers/survey/survey.component";
+import {HomeComponent} from "./controllers/home/home.component";
 
 const routes: Routes = [
   {path: 'survey/:uuid', component: SurveyComponent},
-  {path:'**', pathMatch: 'full', redirectTo:'survey'}
+  {path: '', component: HomeComponent},
+  {path: '**', pathMatch: 'full', redirectTo: 'home'}
 ];
 
 @NgModule({
